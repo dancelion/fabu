@@ -1,0 +1,84 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ol class="breadcrumb">
+        <li><a href="javascript:history.go(-1)">应用列表</a></li>
+        <li class="active">{$info['appName']}</li>
+    </ol>
+    <div class="row">
+        <div class="col-lg-1">
+            <img src="/{$info['icon']}" style="width:120px" class="img-circle">
+        </div>
+        <div class="col-lg-9">
+            <h2>{$info.appName} <small> 适用于{$info.platform}</small></h2>
+            <div class="row">
+                <div class="col-lg-3">Bundle ID</div>
+                <div class="col-lg-3">下载地址</div>
+                <div class="col-lg-3">总下载次数</div>
+                <div class="col-lg-3">今日下载次数</div>
+                <div class="col-lg-3">{$info.bundleId}</div>
+                <div class="col-lg-3">
+                    <a href="{:url('/'.$info['shortUrl'],'',false,'app')}" target="_blank">
+                    {:url('/'.$info['shortUrl'],'',false,'app')}
+                    </a>
+                </div>
+                <div class="col-lg-3">{$info.totalDownloadCount}</div>
+                <div class="col-lg-3">0</div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <a class="btn btn-success btn-lg" href="{:url('apps/index/upload')}" title="上传新版本">
+                <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-success btn-lg" title="删除应用">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+    <form method="post" class="js-ajax-form">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>版本</th>
+                <th>更新时间</th>
+                <th>文件大小</th>
+                <th>下载次数</th>
+                <th>更新日志</th>
+                <th>{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="list" item="vo">
+                <tr <if $info.releaseVersionId eq $vo.id>class="active"</if> >
+                    <td>{$vo.id}</td>
+                    <td>{$vo['versionStr']}({$vo['versionCode']})</td>
+                    <td>{$vo.create_time|date='Y-m-d'}</td>
+                    <td>{$vo.size}</td>
+                    <td>{$vo.downloadCount}</td>
+                    <td>{$vo.changelog}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                编辑 <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" class="release" data-id="{$vo.id}">发布</a></li>
+                                <li><a href="javascript:void(0);" class="download" data-id="{$vo.id}">下载</a></li>
+                                <li><a href="#">编辑</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li ><a href="{:url('delVersion',['id'=>$vo['id']])}" class="btn btn-xs btn-danger js-ajax-delete">删除</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script src="__STATIC__/js/app.js"></script>
+</body>
+</html>

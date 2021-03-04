@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>Little Horse - {$info['appName']}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.css">
+    <style>
+        #title {
+            color: #354052;
+            font-weight: 700;
+            font-size: 26px;
+            height: 37px;
+            line-height: 37px;
+            margin-top: 30px;
+        }
+
+        .info {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -ms-flex-pack: center;
+            justify-content: center;
+            color: #242a34;
+            font-size: 14px;
+            line-height: 20px;
+            margin-top: 12px;
+            opacity: .5;
+        }
+
+        .desc {
+            margin-right: 12px;
+        }
+
+        #download {
+            background-color: #078dce;
+            width: 200px;
+            height: 44px;
+            color: #fff;
+            font-size: 14px;
+            margin-top: 20px;
+            border-color: transparent;
+            border-radius: 20px;
+            padding: 12px 23px;
+        }
+
+        .icon-ic_ios {
+            width: 14px;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+
+<body style="text-align: center">
+    <img src="/{$info.icon}" style="width:125px;border-radius:15px;margin-top:100px;" alt="">
+    <p id="title">{$info.appName}</p>
+    <div class="info">
+        <p class="desc">版本：{$info.releaseVersionCode}</p>
+        <p>大小：{:round($info['current']['size']/1024/1024,2)}M</p>
+    </div>
+    <p>
+        <button id="download"><span>
+                <if $info.platform=='ios'>
+                    <img src="http://image.tiedanqb.cn/ios.png" class="icon-ic_ios" />
+                    <else />
+                    <img src="http://image.tiedanqb.cn/Android.png" class="icon-ic_ios" />
+                </if>
+                下载安装
+            </span></button>
+    </p>
+    <script crossorigin="anonymous" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh"
+        src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        (function () {
+            var phone = check_mobile();
+            $('#download').click(function (e) {
+                if (!phone) {
+                    return false;
+                }
+                $.getJSON("download/{$info.shortUrl}", {},
+                    function (data, textStatus, jqXHR) {
+                        if (!data.code) {
+                            alert(data.msg);
+                            return false;
+                        }
+                        window.location.href = data.data.url;
+                    }
+                );
+            })
+        })()
+        function check_mobile() {
+            var u = navigator.userAgent;
+            isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+            if (isiOS) {
+                return 1;
+            }
+            isAndroid = !!(u.match(/(Android)\s+([\d.]+)/))
+            if (isAndroid) {
+                return 2;
+            }
+            $('#download').text('请从手机端打开');
+            return 0;
+        }
+    </script>
+</body>
+
+</html>
